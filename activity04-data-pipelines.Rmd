@@ -1,6 +1,6 @@
 ---
 title: "Activity 4"
-author: "Name"
+author: "Cleyde Murillo, Jr."
 output: github_document
 ---
 
@@ -33,7 +33,7 @@ Knit your report with the `message = FALSE` R code chunk option and pay attentio
 Now, switch this option to `message = TRUE` and knit your report again.
 Discuss what is different when the `message` option is turned on (`TRUE`) and turned off (`FALSE`) for the previous code chunk.
 
-**Response**:
+**Any additional console messages besides the output will show if 'message = TRUE', and will not show if 'message = FALSE'.**: 
 
 
 Turn the `message` option off and continue in this activity.
@@ -77,12 +77,12 @@ You can view the entire dataset by clicking on the name of the data frame in the
 
 Explore and describe what the `message` option does in `load_data` code chunk.
 
-**Response**:
+**Any additional console messages will not be shown**:
 
 
 Turn the `message` option off and continue in this activity.
 
-#### Asside
+#### Aside
 
 Base R has a function for reading in a csv file as well.
 Type the following in your **Console** pane, pressing Enter/Return at the end:
@@ -121,7 +121,9 @@ Below is a blank R code chunk.
 Name this code chunk `college_grads_top`; you do not need to suppress messages.
 In this code chunk, type `college_recent_grads` to view the top few (first 10) entries of the dataset.
 
-```{r}
+```{r, message = FALSE}
+
+head(college_recent_grads)
 
 ```
 
@@ -160,7 +162,9 @@ We can see that this data frame has a lot of useful information.
 In the remaining sections we will answer the following questions:
 
 - Which major has the lowest unemployment rate?
+  Mathematics/Computer Science
 - Which major has the highest percentage of women?
+  Early Childhood Education
 - Which STEM majors have incomes less than the median income of all majors?
 
 Note that the ACS only asks [one question](https://www.census.gov/acs/www/about/why-we-ask-each-question/sex/) about a person's sexual identity and we are therefore missing a lot of important details about individuals.
@@ -168,15 +172,16 @@ Note that the ACS only asks [one question](https://www.census.gov/acs/www/about/
 ## Analysis
 
 ### Which major has the lowest unemployment rate?
-
+  Nuclear Engineering
 #### Describe your process
-
+  I used the arrange function to show the observations with the lowest unemployment rate.
+  
 What information (variables) do we need to answer this question?
 Describe how you would go about answering this question using a different software (e.g., Excel, SAS, Python) that you are familiar with or simply a general process.
 You do not need to code anything.
 As you write this process, think of it as a series of steps and it might be helpful to start at the goal and work backwards.
 
-**Response**:
+**Since we have the unemployment rate variable we arranged the dataset from its lowest to highest and recorded the observation with the lowest that way**:
 
 
 #### Using `{dplyr}`
@@ -185,7 +190,9 @@ In the R code chunk below, name it `rearrange_college`.
 
 Take the `college_recent_grads` dataset, *then* `arrange` the dataset by `unemployment_rate`.
 
-```{r}
+```{r rearrange_college}
+
+arrange(college_recent_grads, desc(unemployment_rate))
 
 ```
 
@@ -198,11 +205,13 @@ Also, notice that by default when you *arrange* by a variable, it defaults to *a
 Use the pipeline that you made in the `rearrange_college` code chunk as the start to this solution, **then** `select` only the variables `rank`, `major`, and `unemployment_rate`.
 Name this code chunk `lowest_unemploy`.
 
-```{r}
+```{r lowest_unemploy}
+
+arrange(college_recent_grads, desc(unemployment_rate)) %>% select(major, unemployment_rate)
 
 ```
 
-**Response**:
+**We leveraged the arrange function and then used the select function to limit which variables to view in our output**:
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
@@ -212,13 +221,15 @@ Name this code chunk `lowest_unemploy`.
 Using the `college_recent_grads` dataset and functions from `{dplyr}`, `arrange` the dataset by `sharewomen`, and `select` only `rank`, `major`, and `sharewomen`. 
 Name your code chunk `highest_prop_women`.
 
-```{r}
+```{r highest_prop_women}
+
+arrange(college_recent_grads, desc(sharewomen)) %>% select(rank, major, sharewomen)
 
 ```
 
 Discuss your output as it relates to the research question.
 
-**Response**:
+**The major with the largest proportion of women is 'Early Childhood Education' followed by 'Communication Disorders Sciences and Services'**:
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
@@ -243,13 +254,15 @@ Using the `stem_categories` vector and knowledge that the median salary for all 
 Only display the variables `major`, `p25th`, `median`, and `p75th`
 Name the code chunk `stem_low_salaries`.
 
-```{r}
+```{r stem_low_salaries}
+
+college_recent_grads %>% filter(major_category %in% stem_categories)  %>% arrange(median) %>% select(major, p25th, median, p75th)
 
 ```
 
 Discuss your output as it relates to the research question.
 
-**Response**:
+**By filtering, arranging, then selecting we now know that Zoology majors are the least compensated the least when referencing the median income of all majors**:
 
 
 ![](README-img/noun_pause.png) **(Final) Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
